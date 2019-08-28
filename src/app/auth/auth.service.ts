@@ -11,7 +11,7 @@ import swal from 'sweetalert2';
 import { User } from './user.model';
 import { AppState } from '../app.reducer';
 import { ActivarLoadingAction,DesactivarLoadingAction } from '../shared/ui.accions';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnsetUserAction } from './auth.actions';
 import { Subscription } from 'rxjs';
 
 
@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class AuthService {
   private userSubscription:Subscription = new Subscription();
+  private usuario: User;
 
   constructor(private aFAuth: AngularFireAuth, private router: Router, private afDB: AngularFirestore,private store: Store<AppState>) { }
 
@@ -30,12 +31,18 @@ export class AuthService {
        if (fbUser) {
          this.userSubscription = this.afDB.doc(`${fbUser.uid}/usuario`).valueChanges()
                                               .subscribe((usuarioObj: any) => {
+                                                
                                               const newUser = new User(usuarioObj);
+                                              //console.log('objeto que se envia:' + newUser);
                                               this.store.dispatch(new SetUserAction(newUser));
-                                              console.log(newUser);
+                                              //console.log(newUser);
+                                              this.usuario = newUser;
+
+
                                               });
        } else {
 
+        this.usuario = null;
         this.userSubscription.unsubscribe();
 
        }
@@ -84,8 +91,10 @@ export class AuthService {
                      });
   }
   logout(){
+
     this.router.navigate(['/login']);
     this.aFAuth.auth.signOut();
+    this.store.dispatch(new UnsetUserAction());
   }
   isAuth() {
    return this.aFAuth.authState
@@ -98,4 +107,9 @@ export class AuthService {
                       })
                       );
   }
+
+  getUsuario(){
+   return {...this.usuario};
+  }
+
 }

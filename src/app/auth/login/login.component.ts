@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './login.component.html',
   styles: []
 })
-export class LoginComponent implements OnInit,OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
    cargando: boolean;
    subsccription: Subscription;
   constructor(public authService: AuthService, private store: Store<AppState>) { }
