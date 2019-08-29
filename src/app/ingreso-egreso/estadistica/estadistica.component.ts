@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../app.reducer';
+//import { AppState } from '../../app.reducer';
 import { Subscription } from 'rxjs';
 import { IngresoEgreso } from '../ingreso-egreso.model';
 import { MultiDataSet, Label } from 'ng2-charts';
 import { ChartType } from 'chart.js';
+import * as fromIngresoEgreso from '../ingreso-egreso.reducer';
+
 @Component({
   selector: 'app-estadistica',
   templateUrl: './estadistica.component.html',
@@ -23,7 +25,7 @@ export class EstadisticaComponent implements OnInit {
   public doughnutChartType: ChartType = 'doughnut';
 
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<fromIngresoEgreso.AppState>) {
 
 
   }
